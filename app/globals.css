@@ -1,0 +1,262 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --mist: #EBF4F6;
+  --teal-light: #7AB2B2;
+  --teal: #088395;
+  --deep: #09637E;
+
+  /* Heat levels (opacity-based on primary teal) */
+  --heat-0: rgba(8, 131, 149, 0.08);
+  --heat-1: rgba(8, 131, 149, 0.25);
+  --heat-2: rgba(8, 131, 149, 0.45);
+  --heat-3: rgba(8, 131, 149, 0.70);
+  --heat-4: rgba(8, 131, 149, 1.0);
+
+  /* Light theme */
+  --bg: #F4FAFB;
+  --bg-secondary: #FFFFFF;
+  --card: #FFFFFF;
+  --text-primary: #0D1F2D;
+  --text-secondary: #4A7080;
+  --text-muted: #8AAABB;
+  --border: rgba(8, 131, 149, 0.12);
+  --border-hover: rgba(8, 131, 149, 0.3);
+  --tab-bar: rgba(255, 255, 255, 0.92);
+  --input-bg: rgba(8, 131, 149, 0.06);
+  --cell-empty: rgba(8, 131, 149, 0.07);
+}
+
+.dark {
+  /* Soft charcoal dark theme */
+  --bg: #131B24;
+  --bg-secondary: #1A2434;
+  --card: #1C2638;
+  --text-primary: #EBF4F6;
+  --text-secondary: #7AB2B2;
+  --text-muted: #4A6880;
+  --border: rgba(122, 178, 178, 0.12);
+  --border-hover: rgba(122, 178, 178, 0.3);
+  --tab-bar: rgba(19, 27, 36, 0.95);
+  --input-bg: rgba(122, 178, 178, 0.08);
+  --cell-empty: rgba(122, 178, 178, 0.07);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overscroll-behavior: none;
+  overflow-x: hidden;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+/* Heatmap cell styles */
+.heat-cell {
+  border-radius: 2px;
+  transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s ease;
+  cursor: default;
+}
+.heat-cell:hover {
+  transform: scale(1.4);
+  z-index: 10;
+}
+
+/* Completion pop animation */
+@keyframes completionPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.28); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes rippleFill {
+  0% { clip-path: circle(0% at center); }
+  100% { clip-path: circle(150% at center); }
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-48px) scale(0.6); opacity: 0; }
+}
+
+@keyframes shimmerMove {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.completion-pop {
+  animation: completionPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.habit-checkbox {
+  position: relative;
+  overflow: hidden;
+}
+
+.habit-checkbox::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at center, var(--teal) 0%, transparent 70%);
+  transform: scale(0);
+  opacity: 0;
+}
+
+.habit-checkbox.checked::after {
+  animation: rippleFill 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Streak number shimmer */
+.streak-shimmer {
+  background: linear-gradient(90deg, var(--teal), var(--teal-light), var(--deep), var(--teal-light), var(--teal));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerMove 3s linear infinite;
+}
+
+/* Card styles */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  border-color: var(--border-hover);
+}
+
+/* Tab bar glass effect */
+.tab-bar {
+  background: var(--tab-bar);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid var(--border);
+}
+
+/* Safe area for mobile */
+.safe-bottom {
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+}
+
+/* Input styles */
+.input {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(8, 131, 149, 0.12);
+}
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Button styles */
+.btn-primary {
+  background: linear-gradient(135deg, var(--teal), var(--deep));
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  border-radius: 12px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(8, 131, 149, 0.35);
+}
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Modal overlay */
+.modal-overlay {
+  background: rgba(10, 16, 22, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--teal), var(--deep));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Noise texture overlay */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Scrollable content area above tab bar */
+.page-content {
+  padding-bottom: 100px;
+}
+
+/* Loading skeleton */
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.skeleton {
+  background: var(--border);
+  border-radius: 8px;
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+/* Today indicator */
+.today-cell {
+  box-shadow: 0 0 0 2px var(--teal);
+}
+
+/* Habit color dots */
+.emoji-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+}
