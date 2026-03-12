@@ -1,4 +1,4 @@
-# 🔥 Streaks
+# 🔥 StreaksApp
 
 > Track every habit. See your momentum grow.
 
